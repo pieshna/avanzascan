@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Card from '../components/Card';
 import Paso1 from './Paso1';
 import Paso2 from './Paso2';
@@ -24,7 +24,7 @@ function Wrapper() {
     <>
       {index === 0 && (
         <Card descripcion="Por favor, ingresa los datos de la persona a evaluar el riesgo.">
-          <Paso1 saveData={saveData} nexStep={nextStep} />
+          <Paso1 saveData={saveData} nexStep={nextStep} data={datos} />
         </Card>
       )}
       {index === 1 && (

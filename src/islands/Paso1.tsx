@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function Paso1({
   saveData,
+  data,
   nexStep,
 }: {
   saveData: (data: any) => void;
+  data: any;
   nexStep: () => void;
 }) {
   const [datosPersona, setDatosPersona] = useState({
@@ -14,6 +16,18 @@ function Paso1({
     estatura: '',
     peso: '',
   });
+
+  useEffect(() => {
+    if (data) {
+      setDatosPersona({
+        nombre: data.nombre || '',
+        edad: data.edad || '',
+        genero: data.genero || '',
+        estatura: data.estatura || '',
+        peso: data.peso || '',
+      });
+    }
+  }, [data]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -92,7 +106,25 @@ function Paso1({
             onChange={handleChange}
           />
         </div>
-        <button className="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+        <button
+          className={`p-2 rounded-md ${
+            !datosPersona.nombre ||
+            !datosPersona.edad ||
+            !datosPersona.genero ||
+            !datosPersona.estatura ||
+            !datosPersona.peso
+              ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
+              : 'bg-blue-500 text-white hover:bg-blue-600'
+          }`}
+          type="submit"
+          disabled={
+            !datosPersona.nombre ||
+            !datosPersona.edad ||
+            !datosPersona.genero ||
+            !datosPersona.estatura ||
+            !datosPersona.peso
+          }
+        >
           Siguiente
         </button>
       </form>

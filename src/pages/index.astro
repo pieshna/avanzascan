@@ -1,10 +1,10 @@
 ---
 import Wrapper from '../islands/Wrapper';
-import Layout from '../layouts/Layout.astro';
+import LayoutProtected from '../layouts/LayoutProtected.astro';
 ---
 
-<Layout>
+<LayoutProtected>
   <div class="flex items-center justify-center h-screen gap-2">
     <Wrapper client:load />
   </div>
-</Layout>
+</LayoutProtected>

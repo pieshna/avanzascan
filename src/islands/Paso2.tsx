@@ -139,7 +139,7 @@ function Paso2({
               : 'bg-blue-500'
           }`}
           onClick={handleSubmit}
-          disabled={/*files.some((file) => file === null)*/ false}
+          disabled={files.some((file) => file === null)}
         >
           Siguiente
         </button>

@@ -1,0 +1,67 @@
+---
+import Layout from '../components/Layout.astro';
+---
+
+<Layout title="Login">
+  <div class="flex flex-col gap-4 p-4 max-w-lg m-auto shadow-md rounded">
+    <h2 class="text-xl text-center">Iniciar Sesion</h2>
+    <form id="loginForm" class="flex flex-col gap-4">
+      <input
+        id="username"
+        name="username"
+        placeholder="Usuario"
+        required
+        class="border border-gray-300 rounded p-2"
+      />
+      <input
+        id="password"
+        type="password"
+        name="password"
+        placeholder="Contraseña"
+        required
+        class="border border-gray-300 rounded p-2"
+      />
+      <button
+        type="submit"
+        class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200 ease-in-out"
+      >
+        Iniciar Sesión
+      </button>
+    </form>
+
+    <p>
+      No tienes cuenta?
+      <a href="/register" class="text-blue-500 hover:underline">
+        Regístrate aquí
+      </a>
+    </p>
+  </div>
+</Layout>
+<script type="module">
+  document
+    .getElementById('loginForm')
+    .addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, password }),
+        });
+        if (response.ok) {
+          window.location.href = '/'; // Cambia esto según la ruta de tu aplicación
+        } else {
+          const error = await response.json();
+          alert(`Error: ${error.message || 'No se pudo iniciar sesión'}`);
+        }
+      } catch (err) {
+        alert(`Error al iniciar sesión`);
+      }
+    });
+</script>

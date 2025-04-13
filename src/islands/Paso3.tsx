@@ -45,6 +45,23 @@ function Paso3({
     setDatos(tmp);
   }, [data]);
 
+  const handleCerrarSesion = () => {
+    fetch('/api/logout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          window.location.href = '/';
+        } else {
+          alert('Error al cerrar sesión');
+        }
+      })
+      .catch((error) => console.error('Error:', error));
+  };
+
   return (
     <div className="max-w-md mx-auto bg-white p-6  space-y-4">
       <div className="border rounded-md">
@@ -94,6 +111,14 @@ function Paso3({
             : datos.riesgo === 'Medio'
               ? 'Requiere seguimiento'
               : 'No aceptable'}
+        </div>
+        <div>
+          <button
+            className="mt-4 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
+            onClick={handleCerrarSesion}
+          >
+            Cerrar sesion
+          </button>
         </div>
       </div>
     </div>
