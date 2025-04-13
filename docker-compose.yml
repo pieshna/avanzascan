@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  astro_app:
+    build: .
+    container_name: astro_app
+    restart: always
+
+  nginx_proxy:
+    image: nginx:latest
+    container_name: nginx_proxy
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - '80:80'
+    depends_on:
+      - astro_app
