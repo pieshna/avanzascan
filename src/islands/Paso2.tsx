@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import toast from 'react-hot-toast';
 import { FaIdCard, FaUserAlt, FaUserCircle } from 'react-icons/fa';
 
 const labels = ['Foto del DPI', 'Selfie', 'Foto cuerpo completo'];
@@ -6,10 +7,12 @@ const icons = [FaIdCard, FaUserCircle, FaUserAlt];
 
 function Paso2({
   saveData,
+  datos,
   nexStep,
   prevStep,
 }: {
   saveData: (data: any) => void;
+  datos: any;
   nexStep: () => void;
   prevStep: () => void;
 }) {
@@ -69,12 +72,55 @@ function Paso2({
           content_type: file.type,
           is_base64_encoded: true,
           file_content: base64.split(',')[1], // quitamos el prefijo data:image
+          operation: 'aiRiskScore,aiImageRekognitio,identityVerify',
         };
       })
     );
 
     saveData({ files: finalFiles });
-    console.log(finalFiles);
+
+    //realizamos las 3 peticiones hacia https://xysokakk47.execute-api.us-east-1.amazonaws.com/dev/aiwithfile
+
+    await toast.promise(
+      Promise.all(
+        finalFiles.map(async (file) => {
+          if (!file) return null;
+          const response = await fetch(
+            'https://xysokakk47.execute-api.us-east-1.amazonaws.com/dev/aiwithfile',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(file),
+            }
+          );
+          return response.json();
+        })
+        //hacemos fetch a la api de peticiones.ts
+      ),
+      {
+        loading: 'Cargando...',
+        success: 'Imágenes cargadas correctamente!',
+        error: 'Error al cargar las imágenes.',
+      }
+    );
+
+    await fetch('/api/peticiones', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        imagenes: finalFiles,
+        ...datos,
+      }),
+    }).then((response) => {
+      if (!response.ok) {
+        throw new Error('Error al guardar las imágenes');
+      }
+    });
+
     nexStep();
   };
 

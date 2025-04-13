@@ -19,4 +19,12 @@ CREATE TABLE IF NOT EXISTS sessions (
   user_id TEXT,
   expires_at INTEGER
 );
+
+CREATE TABLE IF NOT EXISTS peticiones (
+  id TEXT PRIMARY KEY,
+  user_id TEXT,
+  body TEXT,
+  created_at INTEGER DEFAULT (strftime('%s', 'now')),
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+);
 `);

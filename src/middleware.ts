@@ -5,7 +5,11 @@ export const onRequest = defineMiddleware(
   async ({ request, redirect }, next) => {
     const url = new URL(request.url);
 
-    if (url.pathname === '/login' || url.pathname === '/register') {
+    if (
+      url.pathname === '/login' ||
+      url.pathname === '/register' ||
+      url.pathname.startsWith('/api/peticiones')
+    ) {
       const cookies = request.headers.get('cookie') || '';
       const session = cookies
         .split('; ')

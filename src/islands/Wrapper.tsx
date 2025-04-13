@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Toaster } from 'react-hot-toast';
 import Card from '../components/Card';
 import Paso1 from './Paso1';
 import Paso2 from './Paso2';
@@ -22,6 +23,7 @@ function Wrapper() {
 
   return (
     <>
+      <Toaster position="bottom-center" />
       {index === 0 && (
         <Card descripcion="Por favor, ingresa los datos de la persona a evaluar el riesgo.">
           <Paso1 saveData={saveData} nexStep={nextStep} data={datos} />
@@ -32,7 +34,12 @@ function Wrapper() {
           descripcion="Por favor, sube una foto del DPI, una foto tipo selfie y una foto de
         cuerpo completo."
         >
-          <Paso2 saveData={saveData} nexStep={nextStep} prevStep={prevStep} />
+          <Paso2
+            saveData={saveData}
+            nexStep={nextStep}
+            prevStep={prevStep}
+            datos={datos}
+          />
         </Card>
       )}
       {index === 2 && (
