@@ -62,6 +62,10 @@ function Paso3({
       .catch((error) => console.error('Error:', error));
   };
 
+  const handleReloadPage = () => {
+    window.location.reload();
+  };
+
   return (
     <div className="max-w-md mx-auto bg-white p-6  space-y-4">
       <div className="border rounded-md">
@@ -112,7 +116,14 @@ function Paso3({
               ? 'Requiere seguimiento'
               : 'No aceptable'}
         </div>
-        <div>
+
+        <div className="flex flex-col items-center justify-center gap-1">
+          <button
+            className="mt-4 bg-gray-500 text-white p-2 rounded-md hover:bg-gray-600"
+            onClick={handleReloadPage}
+          >
+            Volver a empezar
+          </button>
           <button
             className="mt-4 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
             onClick={handleCerrarSesion}

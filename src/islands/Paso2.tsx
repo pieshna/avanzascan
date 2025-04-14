@@ -108,6 +108,7 @@ function Paso2({
 
     await fetch('/api/peticiones', {
       method: 'POST',
+      credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -162,9 +163,9 @@ function Paso2({
         })}
       </div>
 
-      <div className="mt-4 flex justify-between flex-wrap gap-2">
+      <div className="mt-4 flex flex-col md:flex-row justify-between flex-wrap gap-2">
         <button
-          className="bg-blue-500 text-white p-2 rounded-md"
+          className="bg-red-500 text-white p-2 rounded-md justify-between"
           onClick={prevStep}
         >
           Regresar

@@ -66,18 +66,18 @@ function Paso1({
           value={datosPersona.nombre}
           onChange={handleChange}
         />
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <input
             type="number"
             name="edad"
             placeholder="Edad"
-            className="p-2 border-2 border-gray-300 rounded-md"
+            className="p-2 border-2 border-gray-300 rounded-md w-full"
             value={datosPersona.edad}
             onChange={handleChange}
           />
           <select
             name="genero"
-            className="p-2 border-2 border-gray-300 rounded-md"
+            className="p-2 border-2 border-gray-300 rounded-md w-full"
             value={datosPersona.genero}
             onChange={handleSelectChange}
           >
@@ -88,12 +88,12 @@ function Paso1({
             <option value="otro">Otro</option>
           </select>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <input
             type="number"
             name="estatura"
             placeholder="Estatura (cm)"
-            className="p-2 border-2 border-gray-300 rounded-md"
+            className="p-2 border-2 border-gray-300 rounded-md w-full"
             value={datosPersona.estatura}
             onChange={handleChange}
           />
@@ -101,7 +101,7 @@ function Paso1({
             type="number"
             name="peso"
             placeholder="Peso (kg)"
-            className="p-2 border-2 border-gray-300 rounded-md"
+            className="p-2 border-2 border-gray-300 rounded-md w-full"
             value={datosPersona.peso}
             onChange={handleChange}
           />
