@@ -5,7 +5,7 @@ import { db } from '../../lib/db';
 export const POST: APIRoute = async ({ request, redirect }) => {
   const data = await request.json();
 
-  const { username, password } = data;
+  const { nombre, username, password } = data;
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const userId = crypto.randomUUID();
@@ -28,8 +28,8 @@ export const POST: APIRoute = async ({ request, redirect }) => {
 
   try {
     await db.run(
-      'INSERT INTO users (id, username, hashed_password) VALUES (?, ?, ?)',
-      [userId, username, hashedPassword]
+      'INSERT INTO users (id,nombre, username, hashed_password) VALUES (?, ?, ?, ?)',
+      [userId, nombre, username, hashedPassword]
     );
   } catch (error) {
     return new Response(JSON.stringify({ message: 'Error creating user' }), {

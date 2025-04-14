@@ -10,6 +10,7 @@ export const db = await open({
 await db.exec(`
 CREATE TABLE IF NOT EXISTS users (
   id TEXT PRIMARY KEY,
+  nombre TEXT,
   username TEXT UNIQUE,
   hashed_password TEXT
 );
