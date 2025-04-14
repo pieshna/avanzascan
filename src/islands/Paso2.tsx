@@ -80,11 +80,13 @@ function Paso2({
     saveData({ files: finalFiles });
 
     //realizamos las 3 peticiones hacia https://xysokakk47.execute-api.us-east-1.amazonaws.com/dev/aiwithfile
+    let isPersona = false;
 
     await toast.promise(
       Promise.all(
-        finalFiles.map(async (file) => {
+        finalFiles.map(async (file, i) => {
           if (!file) return null;
+          if (i !== 1) return null; // Solo enviar la selfie a la API
           const response = await fetch(
             'https://xysokakk47.execute-api.us-east-1.amazonaws.com/dev/aiwithfile',
             {
@@ -95,7 +97,23 @@ function Paso2({
               body: JSON.stringify(file),
             }
           );
-          return response.json();
+          const result = await response.json();
+          const res = JSON.parse(result?.body || '{}');
+          if (!res?.analisis) return null;
+          const jsonMatch = res?.analisis?.match(/```json([\s\S]*?)```/);
+
+          if (jsonMatch) {
+            const jsonString = jsonMatch[1];
+            const jsonData = JSON.parse(jsonString);
+            if (jsonData?.esPersona != 'no') {
+              isPersona = true;
+            }
+            saveData({
+              ...datos,
+              peticion: jsonData,
+            });
+          }
+          return res;
         })
         //hacemos fetch a la api de peticiones.ts
       ),
@@ -106,7 +124,7 @@ function Paso2({
       }
     );
 
-    await fetch('/api/peticiones', {
+    /*await fetch('/api/peticiones', {
       method: 'POST',
       credentials: 'same-origin',
       headers: {
@@ -120,8 +138,14 @@ function Paso2({
       if (!response.ok) {
         throw new Error('Error al guardar las imágenes');
       }
-    });
+    });*/
 
+    if (!isPersona) {
+      toast.error(
+        'No se ha podido verificar la identidad, por favor intenta nuevamente'
+      );
+      return;
+    }
     nexStep();
   };
 

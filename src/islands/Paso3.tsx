@@ -21,14 +21,26 @@ function Paso3({
   });
 
   const evaluarRiesgo = (imc: number) => {
-    if (imc < 18.5) return 'Bajo peso';
-    if (imc >= 18.5 && imc < 24.9) return 'Bajo'; // Para que salga como en tu imagen
-    if (imc >= 25 && imc < 29.9) return 'Medio';
-    return 'Alto';
+    if (imc < 18.5) return 'bajo peso';
+    if (imc >= 18.5 && imc < 24.9) return 'bajo'; // Para que salga como en tu imagen
+    if (imc >= 25 && imc < 29.9) return 'medio';
+    return 'alto';
   };
 
   useEffect(() => {
     if (!data) return;
+    if (data.peticion) {
+      const tmp = {
+        edad: data.peticion.edad,
+        genero: data.peticion.sexo,
+        peso: data.peticion.peso || 0,
+        estatura: data.peticion.estatura || data.estatura || 0, // Mostrar cm
+        imc: data.peticion.imc || 0,
+        riesgo: data.peticion.riesgo || 0,
+      };
+      setDatos(tmp);
+      return;
+    }
     const estaturaEnMetros =
       data.estatura > 3 ? data.estatura / 100 : data.estatura;
 
@@ -102,19 +114,19 @@ function Paso3({
       <div className="text-center">
         <div
           className={`inline-block px-4 py-2 rounded-md font-semibold text-white ${
-            datos.riesgo === 'Bajo'
+            datos.riesgo === 'bajo'
               ? 'bg-green-500'
-              : datos.riesgo === 'Medio'
+              : datos.riesgo === 'medio'
                 ? 'bg-yellow-500'
                 : 'bg-red-500'
           }`}
         >
           Candidato{' '}
-          {datos.riesgo === 'Bajo'
-            ? 'Aceptable'
-            : datos.riesgo === 'Medio'
-              ? 'Requiere seguimiento'
-              : 'No aceptable'}
+          {datos.riesgo === 'bajo'
+            ? 'aceptable'
+            : datos.riesgo === 'medio'
+              ? 'requiere seguimiento'
+              : 'no aceptable'}
         </div>
 
         <div className="flex flex-col items-center justify-center gap-1">
