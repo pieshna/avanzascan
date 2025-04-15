@@ -84,8 +84,6 @@ function Paso1({
             <option value="">Selecciona un género</option>
             <option value="masculino">Masculino</option>
             <option value="femenino">Femenino</option>
-            <option value="no-binario">No binario</option>
-            <option value="otro">Otro</option>
           </select>
         </div>
         <div className="flex gap-2 flex-wrap">
