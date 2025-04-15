@@ -229,24 +229,27 @@ function Paso2({
               Previsualización de Imágenes
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {previewImages.map((src, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col items-center justify-center p-4 border-2 rounded-lg"
-                >
-                  <p className="font-semibold mb-2">{labels[index]}</p>
-                  {src ? (
-                    <img
-                      src={src}
-                      alt="Preview"
-                      className="max-h-60 object-contain"
-                    />
-                  ) : (
-                    <p className="text-gray-500">No hay imagen</p>
-                  )}
-                </div>
-              ))}
+            {/* Contenedor solo para el grid con scroll */}
+            <div className="overflow-y-auto max-h-[70vh]">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {previewImages.map((src, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col items-center justify-center p-4 border-2 rounded-lg"
+                  >
+                    <p className="font-semibold mb-2">{labels[index]}</p>
+                    {src ? (
+                      <img
+                        src={src}
+                        alt="Preview"
+                        className="max-h-60 object-contain"
+                      />
+                    ) : (
+                      <p className="text-gray-500">No hay imagen</p>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
 
             <button
