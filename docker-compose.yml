@@ -5,6 +5,10 @@ services:
     build: .
     container_name: astro_app
     restart: always
+    volumes:
+      - ./src/db:/app/src/db # Monta la carpeta local donde está la base de datos
+    environment:
+      - NODE_ENV=production
 
   nginx_proxy:
     image: nginx:latest
