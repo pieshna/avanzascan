@@ -94,8 +94,7 @@ function Paso2({
         finalFiles.map(async (file, i) => {
           if (!file) return null;
           if (i == 0) {
-            //comentado hasta que se resuelva el problema de la api
-            /* await fetch(
+            await fetch(
               'https://xysokakk47.execute-api.us-east-1.amazonaws.com/dev/verifyIdentity',
               {
                 method: 'POST',
@@ -111,7 +110,7 @@ function Paso2({
               const res = await response.json();
               const body = JSON.parse(res?.body || '{}');
               if (+body?.max_similarity > 60) isSimilar = true;
-            });*/
+            });
             return null;
           }
           const response = await fetch(
