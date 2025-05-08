@@ -18,6 +18,12 @@ function Paso2({
 }) {
   const [files, setFiles] = useState<(File | null)[]>([null, null, null]);
   const [showPreview, setShowPreview] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [captureMode, setCaptureMode] = useState<
+    'environment' | 'user' | boolean
+  >(false);
+  const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+
   const [previewImages, setPreviewImages] = useState<(string | null)[]>([
     null,
     null,
@@ -29,6 +35,8 @@ function Paso2({
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
   ];
+
+  const isMobile = () => /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
   const handleFileChange = (index: number, file: File | null) => {
     if (file && file.size > 6 * 1024 * 1024) {
@@ -64,7 +72,7 @@ function Paso2({
 
   const handleSubmit = async () => {
     const finalFiles = await Promise.all(
-      files.map(async (file) => {
+      files.map(async (file, i) => {
         if (!file) return null;
         const base64 = await toBase64(file);
         return {
@@ -81,12 +89,31 @@ function Paso2({
 
     //realizamos las 3 peticiones hacia https://xysokakk47.execute-api.us-east-1.amazonaws.com/dev/aiwithfile
     let isPersona = false;
-
+    let isSimilar = false;
     await toast.promise(
       Promise.all(
         finalFiles.map(async (file, i) => {
           if (!file) return null;
-          if (i !== 1) return null; // Solo enviar la selfie a la API
+          if (i == 0) {
+            await fetch(
+              'https://xysokakk47.execute-api.us-east-1.amazonaws.com/dev/verifyIdentity',
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  source_image: file.file_content,
+                  target_image: finalFiles[1]?.file_content,
+                }),
+              }
+            ).then(async (response) => {
+              const res = await response.json();
+              const body = JSON.parse(res?.body || '{}');
+              if (+body?.max_similarity > 60) isSimilar = true;
+            });
+            return null;
+          }
           const response = await fetch(
             'https://xysokakk47.execute-api.us-east-1.amazonaws.com/dev/aiwithfile',
             {
@@ -149,6 +176,27 @@ function Paso2({
     nexStep();
   };
 
+  const handleIconClick = (index: number) => {
+    if (isMobile()) {
+      setCurrentIndex(index);
+      if (!showModal) setShowModal(true);
+    } else {
+      inputRefs[index].current?.click();
+    }
+  };
+
+  const handleModalOption = (option: 'camera' | 'gallery') => {
+    if (currentIndex !== null) {
+      setCaptureMode(false);
+      const newCaptureMode = option === 'camera' ? 'environment' : false;
+      setCaptureMode(newCaptureMode);
+      setTimeout(() => {
+        inputRefs[currentIndex]?.current?.click();
+        setShowModal(false);
+      }, 100);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -159,7 +207,7 @@ function Paso2({
           return (
             <div
               key={index}
-              onClick={() => inputRefs[index].current?.click()}
+              onClick={() => handleIconClick(index)}
               className={`flex flex-col items-center justify-center p-6 border-2 rounded-lg transition cursor-pointer select-none ${
                 fileLoaded
                   ? 'border-green-500 bg-green-50'
@@ -173,6 +221,7 @@ function Paso2({
               <input
                 type="file"
                 accept="image/*"
+                capture={captureMode}
                 ref={inputRefs[index]}
                 onChange={(e) =>
                   handleFileChange(
@@ -215,6 +264,34 @@ function Paso2({
           Siguiente
         </button>
       </div>
+
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded-lg space-y-4">
+            <h2 className="text-lg font-bold text-center">
+              ¿Qué deseas hacer?
+            </h2>
+            <div className="flex justify-around gap-3">
+              <button
+                className="bg-blue-500 text-white p-2 rounded-md"
+                onClick={() => {
+                  handleModalOption('camera');
+                }}
+              >
+                Tomar Foto
+              </button>
+              <button
+                className="bg-green-500 text-white p-2 rounded-md"
+                onClick={() => {
+                  handleModalOption('gallery');
+                }}
+              >
+                Subir desde Galería
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showPreview && (
         <div
