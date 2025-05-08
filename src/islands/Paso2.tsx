@@ -87,7 +87,6 @@ function Paso2({
 
     saveData({ files: finalFiles });
 
-    //realizamos las 3 peticiones hacia https://xysokakk47.execute-api.us-east-1.amazonaws.com/dev/aiwithfile
     let isPersona = false;
     let isSimilar = false;
     await toast.promise(
@@ -95,7 +94,8 @@ function Paso2({
         finalFiles.map(async (file, i) => {
           if (!file) return null;
           if (i == 0) {
-            await fetch(
+            //comentado hasta que se resuelva el problema de la api
+            /* await fetch(
               'https://xysokakk47.execute-api.us-east-1.amazonaws.com/dev/verifyIdentity',
               {
                 method: 'POST',
@@ -111,7 +111,7 @@ function Paso2({
               const res = await response.json();
               const body = JSON.parse(res?.body || '{}');
               if (+body?.max_similarity > 60) isSimilar = true;
-            });
+            });*/
             return null;
           }
           const response = await fetch(
@@ -150,22 +150,6 @@ function Paso2({
         error: 'Error al cargar las imágenes.',
       }
     );
-
-    /*await fetch('/api/peticiones', {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        imagenes: finalFiles,
-        ...datos,
-      }),
-    }).then((response) => {
-      if (!response.ok) {
-        throw new Error('Error al guardar las imágenes');
-      }
-    });*/
 
     if (!isPersona) {
       toast.error(
